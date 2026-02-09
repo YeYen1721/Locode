@@ -102,11 +102,14 @@ class MainActivity : FlutterActivity() {
             .setSmallIcon(android.R.drawable.ic_dialog_alert)
             .setContentTitle("🔍 Analyzing URL...")
             .setContentText(displayUrl)
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setPriority(NotificationCompat.PRIORITY_MAX)
             .setCategory(NotificationCompat.CATEGORY_STATUS)
+            .setColor(0xFF2196F3.toInt()) // Blue
+            .setColorized(true)
             .setAutoCancel(false)
             .setOngoing(true)
             .setDefaults(NotificationCompat.DEFAULT_ALL)
+            .setVibrate(longArrayOf(0, 250, 250, 250))
             // Make it a heads-up notification
             .setFullScreenIntent(null, true)
             .build()
@@ -212,6 +215,13 @@ class MainActivity : FlutterActivity() {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
+        val color = when (verdict) {
+            "safe" -> 0xFF2ECC40.toInt() // Green
+            "suspicious" -> 0xFFFFCC00.toInt() // Yellow
+            "dangerous" -> 0xFFE74C3C.toInt() // Red
+            else -> 0xFF9E9E9E.toInt() // Grey
+        }
+
         val icon = when (verdict) {
             "safe" -> android.R.drawable.ic_dialog_info
             "suspicious" -> android.R.drawable.ic_dialog_alert
@@ -219,21 +229,29 @@ class MainActivity : FlutterActivity() {
             else -> android.R.drawable.ic_dialog_alert
         }
 
-        val notification = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
+        val notificationBuilder = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
             .setSmallIcon(icon)
             .setContentTitle(title)
             .setContentText(body)
             .setStyle(NotificationCompat.BigTextStyle().bigText(body))
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setPriority(NotificationCompat.PRIORITY_MAX) // Use MAX for heads-up
             .setCategory(NotificationCompat.CATEGORY_STATUS)
+            .setColor(color)
+            .setColorized(true)
             .setAutoCancel(!ongoing)
             .setOngoing(ongoing)
             .setContentIntent(pendingTapIntent)
             .setDefaults(NotificationCompat.DEFAULT_ALL)
-            .build()
+            // Make it a heads-up notification
+            .setFullScreenIntent(null, true)
+
+        if (!ongoing) {
+            notificationBuilder.setVibrate(longArrayOf(0, 500))
+            notificationBuilder.setLights(color, 3000, 3000)
+        }
 
         try {
-            NotificationManagerCompat.from(this).notify(VERDICT_NOTIFICATION_ID, notification)
+            NotificationManagerCompat.from(this).notify(VERDICT_NOTIFICATION_ID, notificationBuilder.build())
         } catch (e: SecurityException) {
             Log.e(TAG, "Notification permission not granted: ${e.message}")
         }
@@ -248,7 +266,10 @@ class MainActivity : FlutterActivity() {
             ).apply {
                 description = "URL security analysis results"
                 enableVibration(true)
+                vibrationPattern = longArrayOf(0, 500)
                 enableLights(true)
+                lightColor = 0xFFFF0000.toInt()
+                lockscreenVisibility = NotificationCompat.VISIBILITY_PUBLIC
             }
             val manager = getSystemService(NotificationManager::class.java)
             manager.createNotificationChannel(channel)
