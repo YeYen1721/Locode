@@ -202,6 +202,7 @@ class MainActivity : FlutterActivity() {
         riskScore: Int,
         ongoing: Boolean
     ) {
+        Log.d("Loco", "Kotlin received notification request: $verdict")
         // Create intent to open Loco's SafeBrowserPage when tapped
         val tapIntent = Intent(this, MainActivity::class.java).apply {
             putExtra("open_safe_url", url)
@@ -234,14 +235,14 @@ class MainActivity : FlutterActivity() {
             .setContentTitle(title)
             .setContentText(body)
             .setStyle(NotificationCompat.BigTextStyle().bigText(body))
-            .setPriority(NotificationCompat.PRIORITY_MAX) // Use MAX for heads-up
+            .setPriority(NotificationCompat.PRIORITY_HIGH) // PRIORITY_HIGH for heads-up
             .setCategory(NotificationCompat.CATEGORY_STATUS)
             .setColor(color)
             .setColorized(true)
             .setAutoCancel(!ongoing)
             .setOngoing(ongoing)
             .setContentIntent(pendingTapIntent)
-            .setDefaults(NotificationCompat.DEFAULT_ALL)
+            .setDefaults(NotificationCompat.DEFAULT_ALL) // DEFAULT_ALL for sound/vibration
             // Make it a heads-up notification
             .setFullScreenIntent(null, true)
 

@@ -10,12 +10,13 @@ class ThreatMarkerBuilder {
     required Function(ParkingLocation) onTap,
     BitmapDescriptor? redPin,
     BitmapDescriptor? greenPin,
+    BitmapDescriptor? yellowPin,
     BitmapDescriptor? grayPin,
   }) async {
     final markers = <Marker>{};
 
     for (final location in locations) {
-      final icon = _getPinForStatus(location.status, redPin, greenPin, grayPin);
+      final icon = _getPinForStatus(location.status, redPin, greenPin, yellowPin, grayPin);
 
       markers.add(Marker(
         markerId: MarkerId(location.name),
@@ -33,11 +34,12 @@ class ThreatMarkerBuilder {
     ThreatStatus status,
     BitmapDescriptor? redPin,
     BitmapDescriptor? greenPin,
+    BitmapDescriptor? yellowPin,
     BitmapDescriptor? grayPin,
   ) {
     return switch (status) {
       ThreatStatus.reported => redPin ?? BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
-      ThreatStatus.suspicious => grayPin ?? BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange),
+      ThreatStatus.suspicious => yellowPin ?? BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange),
       ThreatStatus.unknown => grayPin ?? BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueViolet),
       ThreatStatus.safe => greenPin ?? BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
     };
