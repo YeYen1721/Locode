@@ -1,0 +1,11 @@
+{
+    "applinks": {
+        "apps": [],
+        "details": [
+            {
+                "appID": "ABC1234567.com.example.safescan",
+                "paths": [ "/verify/*" ]
+            }
+        ]
+    }
+}
