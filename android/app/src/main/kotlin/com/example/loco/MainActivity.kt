@@ -99,11 +99,12 @@ class MainActivity : FlutterActivity() {
         val displayUrl = if (url.length > 50) url.take(50) + "..." else url
 
         val notification = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
-            .setSmallIcon(android.R.drawable.ic_dialog_alert)
+            .setSmallIcon(R.mipmap.ic_launcher)
             .setContentTitle("🔍 Analyzing URL...")
             .setContentText(displayUrl)
-            .setPriority(NotificationCompat.PRIORITY_MAX)
-            .setCategory(NotificationCompat.CATEGORY_STATUS)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setCategory(NotificationCompat.CATEGORY_ALARM)
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .setColor(0xFF2196F3.toInt()) // Blue
             .setColorized(true)
             .setAutoCancel(false)
@@ -223,20 +224,14 @@ class MainActivity : FlutterActivity() {
             else -> 0xFF9E9E9E.toInt() // Grey
         }
 
-        val icon = when (verdict) {
-            "safe" -> android.R.drawable.ic_dialog_info
-            "suspicious" -> android.R.drawable.ic_dialog_alert
-            "dangerous" -> android.R.drawable.ic_delete
-            else -> android.R.drawable.ic_dialog_alert
-        }
-
         val notificationBuilder = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
-            .setSmallIcon(icon)
+            .setSmallIcon(R.mipmap.ic_launcher)
             .setContentTitle(title)
             .setContentText(body)
             .setStyle(NotificationCompat.BigTextStyle().bigText(body))
             .setPriority(NotificationCompat.PRIORITY_HIGH) // PRIORITY_HIGH for heads-up
-            .setCategory(NotificationCompat.CATEGORY_STATUS)
+            .setCategory(NotificationCompat.CATEGORY_ALARM)
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .setColor(color)
             .setColorized(true)
             .setAutoCancel(!ongoing)
@@ -260,6 +255,10 @@ class MainActivity : FlutterActivity() {
 
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val manager = getSystemService(NotificationManager::class.java)
+            // DELETE old channel first to reset importance (Android caches channel settings)
+            manager.deleteNotificationChannel(NOTIFICATION_CHANNEL_ID)
+
             val channel = NotificationChannel(
                 NOTIFICATION_CHANNEL_ID,
                 "Loco Security Alerts",
@@ -272,7 +271,6 @@ class MainActivity : FlutterActivity() {
                 lightColor = 0xFFFF0000.toInt()
                 lockscreenVisibility = NotificationCompat.VISIBILITY_PUBLIC
             }
-            val manager = getSystemService(NotificationManager::class.java)
             manager.createNotificationChannel(channel)
         }
     }
