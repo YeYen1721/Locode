@@ -40,6 +40,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   bool _isAnalyzing = false;
   bool _isCenteredOnUser = true;
   bool _isAnimating = false;
+  bool _isLocationOverridden = false;
   DateTime? _lastParkingFetch;
   LatLng? _currentPosition;
   ParkingLocation? _selectedLocation;
@@ -121,6 +122,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       ),
     ).listen((Position position) {
       if (!mounted) return;
+      
+      // If user has searched for a place, don't let real GPS move the marker away
+      if (_isLocationOverridden) return;
+
       _currentPosition = LatLng(position.latitude, position.longitude);
       _updateMyLocationMarker();
       _loadNearbyParkingLots();
@@ -408,26 +413,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           title = '⚠️ Suspicious - $url';
         }
 
-        // Final notification via FlutterLocalNotificationsPlugin
-        await FlutterLocalNotificationsPlugin().show(
-          0,
-          title,
-          'Risk: $riskScore/100 · $toolCalls checks · $summary',
-          const NotificationDetails(
-            android: AndroidNotificationDetails(
-              'locode_analysis',
-              'URL Analysis',
-              channelDescription: 'Shows URL analysis results',
-              importance: Importance.high,
-              priority: Priority.high,
-              ongoing: false,
-              autoCancel: true,
-            ),
-          ),
-          payload: url,
-        );
-        
-        // Also update the native notification state to non-ongoing
+        // Update the native notification state to non-ongoing (Heads-up)
         await _notifChannel.invokeMethod('updateNotification', {
             'title': title,
             'body': 'Risk: $riskScore/100 · $toolCalls checks · $summary',
@@ -442,24 +428,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         print('[Locode] Agent FAILED: $e');
         print('[Locode] Stack: $stackTrace');
         
-        await FlutterLocalNotificationsPlugin().show(
-          0,
-          '⚠️ Analysis incomplete',
-          'Could not complete analysis for $url. Tap to open safely.',
-          const NotificationDetails(
-            android: AndroidNotificationDetails(
-              'locode_analysis',
-              'URL Analysis',
-              channelDescription: 'Shows URL analysis results',
-              importance: Importance.high,
-              priority: Priority.high,
-              ongoing: false,
-              autoCancel: true,
-            ),
-          ),
-          payload: url,
-        );
-
         await _notifChannel.invokeMethod('updateNotification', {
             'title': '⚠️ Analysis incomplete',
             'body': 'Risk: 50/100 · Agent could not complete analysis.',
@@ -1202,9 +1170,12 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       // 3. Update _currentPosition to the searched location so parking loads there
       if (!mounted) return;
       setState(() {
+        _isLocationOverridden = true;
         _currentPosition = LatLng(lat, lng);
         _isCenteredOnUser = false;
       });
+
+      _updateMyLocationMarker();
 
       // 4. Call _loadNearbyParkingLots() to fetch parking lots at the NEW searched location
       _loadNearbyParkingLots(lat: lat, lng: lng);
