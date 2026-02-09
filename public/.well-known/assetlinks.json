@@ -2,7 +2,7 @@
   "relation": ["delegate_permission/common.handle_all_urls"],
   "target": {
     "namespace": "android_app",
-    "package_name": "com.example.safescan",
+    "package_name": "com.example.locode",
     "sha256_cert_fingerprints":
     ["FA:2A:03:CB:38:8C:01:21:64:1D:6D:93:84:D3:59:71:0A:76:30:22:98:42:07:95:90:3F:0C:6F:69:7C:15:39"]
   }

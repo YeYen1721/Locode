@@ -14,7 +14,7 @@ The project follows a **Clean Architecture** pattern, separating concerns into d
 ## 2. Key Technical Implementations
 
 ### A. Rebranding & Consitency
-The app was fully transitioned from "SafeScan" to **Loco**. This involved:
+The app was fully transitioned from "SafeScan" to **Locode**. This involved:
 - **Android**: Renaming package to `com.example.loco`, updating `applicationId`, and moving Kotlin source files.
 - **iOS**: Updating `CFBundleDisplayName` and `PRODUCT_BUNDLE_IDENTIFIER`.
 - **Flutter**: Renaming the package in `pubspec.yaml` and performing a global refactor of all `package:loco/` imports.

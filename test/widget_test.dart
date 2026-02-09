@@ -13,7 +13,7 @@ import 'package:locode/main.dart';
 void main() {
   testWidgets('Smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    // Since SafeScanApp requires many initializations (Supabase, etc),
+    // Since LocodeApp requires many initializations (Supabase, etc),
     // a simple pumpWidget might fail without proper mocks.
     // For now, we just verify the class exists.
     expect(true, true);

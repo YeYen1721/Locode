@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "safescan" "\0"
+            VALUE "FileDescription", "locode" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "safescan" "\0"
+            VALUE "InternalName", "locode" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2026 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "safescan.exe" "\0"
-            VALUE "ProductName", "safescan" "\0"
+            VALUE "OriginalFilename", "locode.exe" "\0"
+            VALUE "ProductName", "locode" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

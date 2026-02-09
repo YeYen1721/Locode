@@ -3,7 +3,7 @@
         "apps": [],
         "details": [
             {
-                "appID": "ABC1234567.com.example.safescan",
+                "appID": "ABC1234567.com.example.locode",
                 "paths": [ "/verify/*" ]
             }
         ]
