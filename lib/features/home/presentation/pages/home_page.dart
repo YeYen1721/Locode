@@ -49,7 +49,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   
   BitmapDescriptor? _redPin;
   BitmapDescriptor? _greenPin;
-  BitmapDescriptor? _yellowPin;
   BitmapDescriptor? _grayPin;
   BitmapDescriptor? _currentLocationIcon;
   BitmapDescriptor? _parkingIcon;
@@ -169,7 +168,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       _redPin = await _loadSvgIcon('assets/icons/Red.svg', 50);
       _greenPin = await _loadSvgIcon('assets/icons/Green.svg', 50);
       _grayPin = await _loadSvgIcon('assets/icons/Gray.svg', 50);
-      _yellowPin = await _loadSvgIcon('assets/icons/Yellow.svg', 50);
       
       // Initialize custom parking icon using Canvas
       final double dpr = MediaQuery.of(context).devicePixelRatio;
@@ -645,7 +643,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       onTap: (location) => _onMarkerTapped(location),
       redPin: _redPin,
       greenPin: _greenPin,
-      yellowPin: _yellowPin,
       grayPin: _grayPin,
     );
 
