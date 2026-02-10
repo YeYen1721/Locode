@@ -558,7 +558,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               location['latitude'].toDouble(),
               location['longitude'].toDouble(),
             ),
-            icon: _parkingIcon ?? BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+            icon: _grayPin ?? BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueViolet),
             infoWindow: InfoWindow(
               title: '🅿️ $name',
               snippet: snippet,
